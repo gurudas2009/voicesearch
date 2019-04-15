@@ -29,12 +29,10 @@ router.get('/',function(req,res){
 
 
 server.post('/sendAudioToBot',upload.single('soundBlob'), (req, res) => {
-    // var _queryTxt_ = req.body.txtQuery;
-     //var sessionId =  req.body.sessionId;
-     //console.log(req.body);
-     //console.log(req.file);
-   recogniseSpeech(req.file);
-     });
+
+   recogniseSpeech(req.file,res);
+
+  });
  
 
 
@@ -45,10 +43,10 @@ const speech = require('@google-cloud/speech');
 const client = new speech.SpeechClient();
 
 // The name of the audio file to transcribe
-const fileName = './resources/audio.raw';
+///const fileName = './resources/audio.raw';
 
 
-function recogniseSpeech(_audio)
+function recogniseSpeech(_audio,_httpResponse)
 {
 
 // Reads a local audio file and converts it to base64
@@ -62,8 +60,8 @@ const audio = {
   content: audioBytes,
 };
 const config = {
-  encoding: 'LINEAR16',
-  sampleRateHertz: 16000,
+  //encoding: 'LINEAR16',
+ // sampleRateHertz: 16000,
   languageCode: 'en-US',
 };
 const request = {
@@ -76,19 +74,66 @@ client
   .recognize(request)
   .then(data => {
     const response = data[0];
+    //console.log(response);
     const transcription = response.results
       .map(result => result.alternatives[0].transcript)
       .join('\n');
-    console.log(`Transcription: ${transcription}`);
+//    console.log(`Transcription: ${transcription}`);
+
+return _httpResponse.json({
+speechText:transcription
+
+});
+
   })
   .catch(err => {
-    console.error('ERROR:', err);
+    
+return _httpResponse.json({
+  speechText:'error'
+  
+  });
   });
 
 }
 
 
 
+
+server.get('/record.js',function(req,resp) {
+
+  fs.readFile("record.js", function (error, pgResp) {
+    if (error) {
+        resp.writeHead(404);
+        resp.write('Contents you are looking are Not Found');
+    } else {
+        resp.writeHead(200, { 'Content-Type': 'text/html' });
+        resp.write(pgResp);
+    }
+     
+    resp.end();
+});
+
+
+
+});
+
+server.get('/record-main.js',function(req,resp) {
+
+  fs.readFile("record-main.js", function (error, pgResp) {
+    if (error) {
+        resp.writeHead(404);
+        resp.write('Contents you are looking are Not Found');
+    } else {
+        resp.writeHead(200, { 'Content-Type': 'text/html' });
+        resp.write(pgResp);
+    }
+     
+    resp.end();
+});
+
+
+
+});
 
 
 server.use('/', router);
