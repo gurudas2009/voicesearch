@@ -1,0 +1,510 @@
+<html>
+<head>
+  <title>Bot Client</title>
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+<!-- <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script> -->
+<!-- 
+<script src="record-main.js"></script> -->
+<style>
+
+ .user-request {
+    background-color: #efefef;
+    float: left;
+    margin-right: 15px;
+    margin-top: 15px;
+    margin-left: 15px;
+}
+.server-response {
+    color: #ffffff;
+    background-color: #a5d175;
+    float: right;
+    margin-top: 15px;
+    margin-right: 15px;
+    margin-left: 15px;
+}
+.user-request, .server-response {
+    display: inline-block;
+    padding: 15px 25px;
+    border-radius: 3px;
+    border: 1px solid #eee;
+    margin-bottom: 5px;
+    font-size: 16px;
+    clear: both;
+}
+
+#textDiv {
+    width: 100%;
+    border: 0;
+    font-size: 16px;
+    font-weight: 300;
+    margin: 0;
+    height: 55px;
+    background: #eae1da;
+    padding-left: 10%;
+ }
+/*-------------------------------------------------------------- */
+
+.b-agent-demo {
+    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    width: 100%;
+    height: auto;
+    color: #2b313f;
+    font-size: 12px;
+    overflow: hidden;
+    /* position: absolute; */
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.b-agent-demo .b-agent-demo_header {
+    min-height: 80px;
+    height: 80px;
+    overflow: hidden;
+    /* position: fixed; */
+    top: 0;
+    width: 100%;
+    background-color: #2b303e;
+    display: table;
+}
+.b-agent-demo .b-agent-demo_header-icon {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    width: 90px;
+    height: 79px;
+    border-radius: 100%;
+    overflow: hidden;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.b-agent-demo .b-agent-demo_header-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.b-agent-demo .b-agent-demo_powered_by {
+    /* position: fixed; */
+    left: 0;
+    right: 0;
+    top: 80px;
+    height: 30px;
+    background-color: #F8F8F8;
+    vertical-align: middle;
+}
+.b-agent-demo .b-agent-demo_result {
+    overflow-y: auto;
+    background: white;
+    /* position: fixed; */
+    top: 110px;
+    bottom: 55px;
+    width: 100%;
+}
+.clearfix {
+    clear: both;
+}
+.b-agent-demo .b-agent-demo_input {
+    /* position: fixed; */
+    bottom: 0;
+    height: 55px;
+    border-top: 1px solid lightgray;
+    background-color: white;
+    width: 100%;
+}
+.b-agent-demo .b-agent-demo_result-table {
+    /* height: 100%;
+    min-height: 100%; */
+    width: 100%;
+}
+table {
+    display: table;
+    /* border-collapse: separate; */
+    border-spacing: 2px;
+    border-color: grey;
+}
+.b-agent-demo .b-agent-demo_result-table td {
+    vertical-align: bottom;
+}
+.b-agent-demo .user-request {
+    background-color: #efefef;
+    float: left;
+    margin-right: 15px;
+    margin-top: 15px;
+    margin-left: 15px;
+}
+.b-agent-demo .user-request, .b-agent-demo .server-response {
+    display: inline-block;
+    padding: 15px 25px;
+    border-radius: 3px;
+    border: 1px solid #eee;
+    margin-bottom: 5px;
+    font-size: 16px;
+    clear: both;
+}
+.b-agent-demo .server-response {
+    color: #ffffff;
+    background-color: #75b3d1;
+    float: right;
+    margin-top: 15px;
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.b-agent-demo .user-request, .b-agent-demo .server-response {
+    display: inline-block;
+    padding: 15px 25px;
+    border-radius: 3px;
+    border: 1px solid #eee;
+    margin-bottom: 5px;
+    font-size: 16px;
+    clear: both;
+}
+.b-agent-demo .b-agent-demo_input {
+    position: fixed;
+    bottom: 0;
+    height: 55px;
+    border-top: 1px solid lightgray;
+    background-color: white;
+    width: 100%;
+}
+.b-agent-demo #agentDemoForm {
+    display: block;
+    margin-left: 15px;
+    margin-right: 55px;
+}
+.b-agent-demo #query {
+    width: 100%;
+    border: 0;
+    font-size: 16px;
+    font-weight: 300;
+    margin: 0;
+    height: 55px;
+}
+.b-agent-demo .b-agent-demo_input-microphone {
+    display: none;
+    position: absolute;
+    font-size: 20px;
+    width: 54px;
+    height: 54px;
+    right: 0;
+    bottom: 0;
+    cursor: pointer;
+    text-align: center;
+    /* line-height: 30px; */
+    line-height: 54px;
+    background: white;
+    color: #b7bbc4;
+}
+
+.b-agent-demo .b-agent-demo_powered_by img {
+    margin-top: 7px;
+    height: 16px;
+    margin-right: 20px;
+    float: right;
+    vertical-align: middle;
+    border: 0;
+}
+.b-agent-demo .b-agent-demo_powered_by span {
+    color: #b7bbc4;
+    text-transform: uppercase;
+    float: right;
+    vertical-align: middle;
+    line-height: 20px;
+    margin-top: 5px;
+    margin-right: 10px;
+    font-size: 10px;
+    margin-left: -10px;
+}
+.material-icons-extended {
+    font-family: 'Material Icons Extended';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+
+</style>
+
+<!-- 
+<script src="https://cdn.WebRTC-Experiment.com/RecordRTC.js"></script> -->
+</head>
+<body>
+ 
+    <nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">Bot App</a>
+    <ul class="nav navbar-nav">
+      <li class="active">
+        <a href="/">Home</a>
+      </li>
+      <li>
+      
+      </li>
+      <li>
+       
+      </li>
+    </ul>
+  </div>
+</nav>
+<div class="row">
+  
+    <div class="col-md-4">
+    <button onclick="getData()" class="btn btn-primary">get data</button>
+      </div>
+      
+    <div class="col-md-4">
+        <div>
+            <!-- <iframe
+              allow="microphone;"
+              width="350"
+              height="430"
+              src="https://console.dialogflow.com/api-client/demo/embedded/613106d3-fbe8-4cc0-8b52-df3c3b12dcd4">
+          </iframe> -->
+<button id="stopButton" class="btn btn-danger">stop</button>
+<button id="pauseButton" class="btn btn-default">pause</button>               
+<button id="mic" class="btn btn-primary" onclick="startRecording();">record</button>
+           
+<ul id="recordingsList"></ul>
+<!-- 
+          <audio id="player" controls></audio>
+          <button onclick="speak();">record</button>
+          <script>
+function speak(){
+
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+    .then(handleSuccess);
+
+}
+
+
+            var player = document.getElementById('player');
+          
+            var handleSuccess = function(stream) {
+    var context = new AudioContext();
+    var source = context.createMediaStreamSource(stream);
+    var processor = context.createScriptProcessor(1024, 1, 1);
+
+    source.connect(processor);
+    processor.connect(context.destination);
+
+    processor.onaudioprocess = function(e) {
+      // Do something with the data, i.e Convert this to WAV
+      console.log(e.inputBuffer);
+    };
+  };
+          
+          </script> -->
+          <!-- <audio id="player" controls></audio>
+          <script>
+            var player = document.getElementById('player');
+          
+            var handleSuccess = function(stream) {
+              if (window.URL) {
+                player.srcObject = stream;
+              } else {
+                player.src = stream;
+              }
+            };
+          
+            // navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+            //     .then(handleSuccess);
+          </script> -->
+            </div>
+      </div>
+      <div class="col-md-4">
+        <div class="row">
+           <div class="col-md-12">
+            <div class="b-agent-demo">
+
+              <div class="b-agent-demo_header">
+                  <div class="b-agent-demo_header-icon">
+                      <div class="b-agent-demo_header-icon-align-helper">
+                          <img id="agent-avatar" src="https://www.vgroupinc.com/sites/vgroupinc.com/files/VG_logo.png">
+                      </div>
+                  </div>
+                  <div class="b-agent-demo_header-wrapper">
+                      <div class="b-agent-demo_header-agent-name">bot-app</div>
+                      <div class="b-agent-demo_header-description"></div>
+                  </div>
+              </div>
+              <div class="b-agent-demo_powered_by">
+                  <a href="https://www.vgroupinc.com/" target="_blank">
+                      
+                      <img src="https://www.vgroupinc.com/sites/vgroupinc.com/files/VG_logo.png">
+                      
+                          <span>Powered by</span>
+                      
+                  </a>
+              </div>
+              <div class="b-agent-demo_result" id="resultWrapper" style="max-height:300px;overflow-y:scroll">
+                  <table class="b-agent-demo_result-table">
+                    <tbody>
+                      <tr>
+                          <td id="result">
+                             
+                          </td>
+                      </tr>
+                    </tbody>
+                  </table>
+              </div>
+              <div class="clearfix"></div>
+              <div class="b-agent-demo_input">
+                  <div id="agentDemoForm">
+                  <input type="text" name="q" id="query" placeholder="Ask something...">
+                      <!-- <i class="b-agent-demo_input-microphone material-icons-extended glyphicon glyphicon-plus" id="mic" style="display: block;">mic</i>
+           -->
+
+                      <!--div class="b-agent-demo_input-microphone material-icons-extended mic-black" id="mic"></div-->
+                  </div>
+              </div>
+          </div>
+
+           </div>
+       
+        </div>  
+  </div>
+ 
+ <script>
+function getData(){
+
+  $.ajax({
+   // url:'/getdatafromdatabase',
+   url:'/getentities', 
+   type:'GET',
+    dataType:'json',
+
+    success:function(data){
+console.log(data);
+    alert(JSON.stringify(data));
+    
+    
+     }}
+     );
+
+
+}
+
+var botSessionId =  createSessionId();
+
+function createSessionId() {
+function _p8(s) {
+var p = (Math.random().toString(16)+"000000000").substr(2,8);
+return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;
+}
+return _p8() + _p8(true) + _p8(true) + _p8();
+}
+
+
+
+
+
+ function sendMsg(){
+    
+  var txt= $('#query').val();
+   var chatLength=  $('#result div').length;
+   if(chatLength>0)
+   { 
+   // $('#chatWindow div:last').after('<div class="user-request">'+txt+'</div>');
+    $('<div class="user-request">'+txt+'</div>').insertAfter('#result div:last');
+   }else{
+    $('#result').html('<div class="user-request">'+txt+'</div>');
+   }
+
+     $.ajax({
+    url:'/sendMessageToBot',
+    type:'POST',
+    dataType:'json',
+    data:{txtQuery:txt,sessionId:botSessionId},
+    success:function(data){
+
+    var _chatLength=  $('#result div').length;
+   if(_chatLength>0)
+   { 
+    //$('#chatWindow div:last').after('<div class="server-response">'+data.fulfillmentText+'</div>');
+    $('<div class="server-response">'+data.fulfillmentText+'</div>').insertAfter('#result div:last'); 
+  
+  }else{
+    $('#result').html('<div class="server-response">'+txt+'</div>');
+   }
+   $('#query').val('');  
+   }
+    
+    
+    
+     });
+    
+    }
+    var btnSend = document.getElementById("query");
+    btnSend.addEventListener("keydown", function (e) {
+    if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+    sendMsg();
+    }
+});
+
+
+function startRecording() {
+	console.log("recordButton clicked");
+    navigator.mediaDevices.getUserMedia({
+    video: false,
+    audio: true
+}).then(async function(stream) {
+    let recorder = RecordRTC(stream, {
+        type: 'audio',
+        mimeType:'audio/wav',
+        numberOfAudioChannels: 1,
+    });
+    recorder.startRecording();  
+
+    const sleep = m => new Promise(r => setTimeout(r, m));
+    await sleep(3000);
+
+    recorder.stopRecording(function() {
+        let blob = recorder.getBlob();
+      console.log(blob);
+
+	var xhr=new XMLHttpRequest();
+	xhr.onload=function(e) {
+		if(this.readyState === 4) {
+			console.log("Server returned: ",e.target.responseText);
+		}
+	};
+	var fd=new FormData();
+	fd.append("soundBlob",blob);
+	fd.append("sessionId",botSessionId);
+	xhr.open("POST","/sendAudioToBot",true);
+	xhr.send(fd);
+
+
+
+
+    });
+});
+
+}
+
+
+    
+    </script>
+<!-- 
+<script src="record.js"></script> -->
+
+<script src="https://cdn.WebRTC-Experiment.com/RecordRTC.js"></script>
+</body>
+</html>
