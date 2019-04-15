@@ -1,0 +1,24 @@
+{
+  "name": "voicesearch",
+  "version": "1.0.0",
+  "description": "voice serch shopify",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gurudas2009/voicesearch.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gurudas2009/voicesearch/issues"
+  },
+  "homepage": "https://github.com/gurudas2009/voicesearch#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "dialogflow": "^0.8.2",
+    "express": "^4.16.4"
+  }
+}
