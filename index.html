@@ -262,7 +262,9 @@ table {
 </nav>
 <div class="row">
   
-   
+    <div class="col-md-4">
+    <button onclick="getData()" class="btn btn-primary">get data</button>
+      </div>
       
     <div class="col-md-4">
         <div>
@@ -275,9 +277,233 @@ table {
 <button id="stopButton" class="btn btn-danger">stop</button>
 <button id="pauseButton" class="btn btn-default">pause</button>               
 <button id="mic" class="btn btn-primary" onclick="startRecording();">record</button>
+           
+<ul id="recordingsList"></ul>
+<!-- 
+          <audio id="player" controls></audio>
+          <button onclick="speak();">record</button>
+          <script>
+function speak(){
+
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+    .then(handleSuccess);
+
+}
+
+
+            var player = document.getElementById('player');
+          
+            var handleSuccess = function(stream) {
+    var context = new AudioContext();
+    var source = context.createMediaStreamSource(stream);
+    var processor = context.createScriptProcessor(1024, 1, 1);
+
+    source.connect(processor);
+    processor.connect(context.destination);
+
+    processor.onaudioprocess = function(e) {
+      // Do something with the data, i.e Convert this to WAV
+      console.log(e.inputBuffer);
+    };
+  };
+          
+          </script> -->
+          <!-- <audio id="player" controls></audio>
+          <script>
+            var player = document.getElementById('player');
+          
+            var handleSuccess = function(stream) {
+              if (window.URL) {
+                player.srcObject = stream;
+              } else {
+                player.src = stream;
+              }
+            };
+          
+            // navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+            //     .then(handleSuccess);
+          </script> -->
+            </div>
+      </div>
+      <div class="col-md-4">
+        <div class="row">
+           <div class="col-md-12">
+            <div class="b-agent-demo">
+
+              <div class="b-agent-demo_header">
+                  <div class="b-agent-demo_header-icon">
+                      <div class="b-agent-demo_header-icon-align-helper">
+                          <img id="agent-avatar" src="https://www.vgroupinc.com/sites/vgroupinc.com/files/VG_logo.png">
+                      </div>
+                  </div>
+                  <div class="b-agent-demo_header-wrapper">
+                      <div class="b-agent-demo_header-agent-name">bot-app</div>
+                      <div class="b-agent-demo_header-description"></div>
+                  </div>
+              </div>
+              <div class="b-agent-demo_powered_by">
+                  <a href="https://www.vgroupinc.com/" target="_blank">
+                      
+                      <img src="https://www.vgroupinc.com/sites/vgroupinc.com/files/VG_logo.png">
+                      
+                          <span>Powered by</span>
+                      
+                  </a>
+              </div>
+              <div class="b-agent-demo_result" id="resultWrapper" style="max-height:300px;overflow-y:scroll">
+                  <table class="b-agent-demo_result-table">
+                    <tbody>
+                      <tr>
+                          <td id="result">
+                             
+                          </td>
+                      </tr>
+                    </tbody>
+                  </table>
+              </div>
+              <div class="clearfix"></div>
+              <div class="b-agent-demo_input">
+                  <div id="agentDemoForm">
+                  <input type="text" name="q" id="query" placeholder="Ask something...">
+                      <!-- <i class="b-agent-demo_input-microphone material-icons-extended glyphicon glyphicon-plus" id="mic" style="display: block;">mic</i>
+           -->
+
+                      <!--div class="b-agent-demo_input-microphone material-icons-extended mic-black" id="mic"></div-->
+                  </div>
+              </div>
+          </div>
+
+           </div>
+       
+        </div>  
+  </div>
  
- 
- 
+ <script>
+function getData(){
+
+  $.ajax({
+   // url:'/getdatafromdatabase',
+   url:'/getentities', 
+   type:'GET',
+    dataType:'json',
+
+    success:function(data){
+console.log(data);
+    alert(JSON.stringify(data));
+    
+    
+     }}
+     );
+
+
+}
+
+var botSessionId =  createSessionId();
+
+function createSessionId() {
+function _p8(s) {
+var p = (Math.random().toString(16)+"000000000").substr(2,8);
+return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;
+}
+return _p8() + _p8(true) + _p8(true) + _p8();
+}
+
+
+
+
+
+ function sendMsg(){
+    
+  var txt= $('#query').val();
+   var chatLength=  $('#result div').length;
+   if(chatLength>0)
+   { 
+   // $('#chatWindow div:last').after('<div class="user-request">'+txt+'</div>');
+    $('<div class="user-request">'+txt+'</div>').insertAfter('#result div:last');
+   }else{
+    $('#result').html('<div class="user-request">'+txt+'</div>');
+   }
+
+     $.ajax({
+    url:'/sendMessageToBot',
+    type:'POST',
+    dataType:'json',
+    data:{txtQuery:txt,sessionId:botSessionId},
+    success:function(data){
+
+    var _chatLength=  $('#result div').length;
+   if(_chatLength>0)
+   { 
+    //$('#chatWindow div:last').after('<div class="server-response">'+data.fulfillmentText+'</div>');
+    $('<div class="server-response">'+data.fulfillmentText+'</div>').insertAfter('#result div:last'); 
+  
+  }else{
+    $('#result').html('<div class="server-response">'+txt+'</div>');
+   }
+   $('#query').val('');  
+   }
+    
+    
+    
+     });
+    
+    }
+    var btnSend = document.getElementById("query");
+    btnSend.addEventListener("keydown", function (e) {
+    if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+    sendMsg();
+    }
+});
+
+
+function startRecording() {
+// 	console.log("recordButton clicked");
+//     navigator.mediaDevices.getUserMedia({
+//     video: false,
+//     audio: true
+// }).then(async function(stream) {
+//     let recorder = RecordRTC(stream, {
+//         type: 'audio',
+//         mimeType:'audio/wav',
+//         numberOfAudioChannels: 1,
+//         sampleRate: 16000,
+//         desiredSampRate: 16000
+//     });
+//     recorder.startRecording();  
+
+//     const sleep = m => new Promise(r => setTimeout(r, m));
+//     await sleep(3000);
+
+//     recorder.stopRecording(function() {
+//         let blob = recorder.getBlob();
+//       console.log(blob);
+
+// 	var xhr=new XMLHttpRequest();
+// 	xhr.onload=function(e) {
+// 		if(this.readyState === 4) {
+// 			console.log("Server returned: ",e.target.responseText);
+// 		}
+// 	};
+// 	var fd=new FormData();
+// 	fd.append("soundBlob",blob);
+// 	fd.append("sessionId",botSessionId);
+// 	xhr.open("POST","/sendAudioToBot",true);
+// 	xhr.send(fd);
+
+
+
+
+//     });
+// });
+
+}
+
+
+    
+    </script>
+<!-- 
+<script src="record.js"></script> -->
+
 <script src="record.js"></script>
 <script src="record-main.js"></script> 
 <script src="https://cdn.WebRTC-Experiment.com/RecordRTC.js"></script>

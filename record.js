@@ -113,7 +113,9 @@ function startRecording() {
 
 		//start the recording process
 		rec.record()
-
+		setTimeout(() => {
+			stopRecording();
+		  }, 3000);
 		console.log("Recording started");
 
 
@@ -189,7 +191,7 @@ function createDownloadLink(blob) {
 
 	var fd=new FormData();
 	fd.append("soundBlob",blob, filename);
-	//fd.append("sessionId",botSessionId);
+	fd.append("sessionId",botSessionId);
 	xhr.open("POST","/sendAudioToBot",true);
 	xhr.send(fd);
 
