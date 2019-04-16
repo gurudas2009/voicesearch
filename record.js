@@ -116,7 +116,7 @@ function startRecording() {
 
 		console.log("Recording started");
 
-		stopRecording(); 
+		stopRecording
 
 
 	},function(err){
