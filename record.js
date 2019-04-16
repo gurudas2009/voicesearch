@@ -113,6 +113,13 @@ function startRecording() {
 
 		//start the recording process
 		rec.record()
+		setTimeout(() => {
+			rec.stop();
+	  }, 3000);
+	  gumStream.getAudioTracks()[0].stop();
+
+	//create the wav blob and pass it on to createDownloadLink
+	rec.exportWAV(createDownloadLink);
 
 		console.log("Recording started");
 
