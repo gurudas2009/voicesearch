@@ -4,7 +4,7 @@
   "description": "voice serch shopify",
   "main": "index.js",
   "scripts": {
-    "test": "start"
+    start":"index.js"
   },
   "repository": {
     "type": "git",
