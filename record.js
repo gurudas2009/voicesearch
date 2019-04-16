@@ -113,9 +113,7 @@ function startRecording() {
 
 		//start the recording process
 		rec.record()
-		setTimeout(() => {
-			stopRecording();
-	  }, 3000);
+	
 		console.log("Recording started");
 
 		
