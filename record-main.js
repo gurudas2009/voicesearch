@@ -347,8 +347,7 @@
           }
         }
       });
-    
-      return InlineWorker;
+          return InlineWorker;
     })();
     
     module.exports = InlineWorker;
