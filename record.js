@@ -113,10 +113,10 @@ function startRecording() {
 
 		//start the recording process
 		rec.record()
-	
+
 		console.log("Recording started");
 
-		
+
 
 
 	},function(err){
